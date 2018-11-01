@@ -34,7 +34,12 @@ def plotHist(myData, attribute_list, bin_num, save_path):
 
 
 def plotCor(myData, attributeList, save_path):
-    pass
+    myData = myData[attributeList]
+    pd.scatter_matrix(myData, diagonal='kde')
+    name = save_path
+    for a in attributeList:
+        name += a+'_'
+    plt.savefig(name+'.png')
 
 
 def main():
