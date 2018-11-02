@@ -8,8 +8,11 @@ import pandas as pd
 from scipy import stats
 from matplotlib import pyplot as plt
 from sklearn import metrics
+from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+
+from clustering import NormalizeData
 
 
 def getArguments():
@@ -49,12 +52,25 @@ def ANOVA(myData, groupA, divL, targetA):
     return s, p
 
 
+def normalize(myData, labelA):
+    '''
+    drop useless attributes and return normalized array X and original array y
+    '''
+    myData = myData[['CCN', 'SHIFT', 'METHOD', 'OFFENSE', 'XBLOCK', 'YBLOCK', 'WARD', 'DISTRICT',
+                     'NEIGHBORHOOD_CLUSTER', 'CENSUS_TRACT', 'VOTING_PRECINCT', 'LATITUDE',
+                     'LONGITUDE', 'PSA_bin']]
+    X = myData.drop(labelA, axis=1).values
+    y = myData[labelA].values.reshape(-1)
+    # normalizetion
+    min_max_scalor = preprocessing.MinMaxScaler()
+    X = min_max_scalor.fit_transform(X)
+    return X, y
+
 
 def logisticRegression(myData, labelA):
     model = LogisticRegression()
     # convert to numpy array
-    X = myData.values
-    y = myData[labelA].values.reshape(-1)
+    X, y = normalize(myData, labelA)
     # divide into training set and testing set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
     # train
@@ -78,7 +94,7 @@ def main():
         s, p = ANOVA(myData, args.attr[0], args.div, args.attr[1])
         print('using anova, statistic value is', s, 'p value is', p)
     elif args.m == "logis":
-        pred, acc, cm = logisticiRegression(myData, args.lab)
+        pred, acc, cm = logisticRegression(myData, args.lab)
         print("accuracy is", acc)
         print("confusion matrix is")
         print(cm)
