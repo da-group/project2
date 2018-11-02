@@ -6,7 +6,6 @@
 import numpy as np
 import argparse
 import pandas as pd
-from apyori import apriori
 
 def getArguments():
     # get and parse command line arguments
@@ -29,14 +28,16 @@ def describe(data):
 # def LOF(colum):
 
 
+#############################
+# drop the attributes that are not useful
 def dropUselessAttr(data):
     '''
-    drop the attributes that are not useful
     in crime2017_cleaned.csv: "OBJECTID" is not helpful
     '''
     data.drop(['OBJECTID'], axis=1, inplace=True)
 
-
+#############################
+# handle missing values
 def handleMissingValues(data):
     '''
     count the missing value of a column
@@ -60,7 +61,7 @@ def handleMissingValues(data):
                 print("")
             '''
             fill the missing value with mode
-            because the mean isn't valid
+            because the mean isn't valid in most cases
             '''
             data[column].fillna(data[column].mode()[0], inplace=True)
 
@@ -75,13 +76,17 @@ def checkMissing(data):
         print(column + ": " + str(NaN_num))
 
 
+#############################
+# bin some numeric attributes
 def binning(data):
     '''
-    bin the attribute PSA (min:101, max:708)
+    bin the attribute PSA (min:101, max:708) in crime2017_cleaned.csv
     '''
-    # pre-bin
-    psa_bins = [100, 200, 300, 400, 500, 600, 700, 800]
-    data['PSA_bin'] = np.digitize(data['PSA'], psa_bins)
+    for column in data.columns:
+        if column == 'PSA':
+            # pre-bin
+            psa_bins = [100, 200, 300, 400, 500, 600, 700, 800]
+            data['PSA_bin'] = np.digitize(data['PSA'], psa_bins)
     return data
 
 
@@ -117,14 +122,6 @@ def convertNominalAttr(data):
             data[column] = data[column].map(offense_mapping)
 
 
-#############################
-# association rule mining by running Apriori
-def associationRules(data):
-    results = list(apriori(data,min_support=0.4,min_confidence=0.7))
-    print(results)
-    return results
-
-
 def main():
     args = getArguments()
     myData = pd.read_csv(args.f, sep=',', encoding='latin1')
@@ -140,9 +137,7 @@ def main():
     convertNominalAttr(myData)
     describe(myData)
     # write into a new .csv file
-    myData.to_csv(args.f.replace('.csv', '_preprocessed.csv'), sep=',',index=None)
-    # association rule mining to find the frequent patterns
-    associationRules(myData)
+    myData.to_csv(args.f.replace('_cleaned.csv', '_preprocessed.csv'), sep=',',index=None)
 
 
 if __name__ == '__main__':
