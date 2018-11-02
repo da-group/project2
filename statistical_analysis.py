@@ -11,13 +11,14 @@ import pandas as pd
 def getArguments():
     # get and parse command line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', type=str, default='./dataset/crime2017_cleaned.csv', help='the file path')
+    parser.add_argument(
+        '-f', type=str, default='./dataset/crime2017_cleaned.csv', help='the file path')
     return parser.parse_args()
 
-'''
-determine the mean (mode if categorical), median, 
-and standard deviation of attributes in the dataset
-'''
+
+#############################
+# determine the mean (mode if categorical), median, 
+# and standard deviation of attributes in the dataset
 def describe(data):
     # describe the nominal attributes, including the mode
     print(data.describe(include=[np.object]))
@@ -33,7 +34,7 @@ def dropUselessAttr(data):
     drop the attributes that are not useful
     in crime2017_cleaned.csv: "OBJECTID" is not helpful
     '''
-    data.drop(['OBJECTID'],axis=1,inplace=True)
+    data.drop(['OBJECTID'], axis=1, inplace=True)
 
 
 def handleMissingValues(data):
@@ -73,6 +74,7 @@ def checkMissing(data):
         NaN_num = sum(NaN_list)
         print(column + ": " + str(NaN_num))
 
+
 def binning(data):
     '''
     bin the attribute PSA (min:101, max:708)
@@ -81,6 +83,38 @@ def binning(data):
     psa_bins = [100, 200, 300, 400, 500, 600, 700, 800]
     data['PSA_bin'] = np.digitize(data['PSA'], psa_bins)
     return data
+
+
+#############################
+# convert nominal attributes to numeric attributes
+def convertNominalAttr(data):
+    for column in data.columns:
+        '''
+        for crime2017_cleaned.csv
+        '''
+        if column == 'SHIFT':
+            shift_mapping = {'DAY': 1, 'EVENING': 2, 'MIDNIGHT': 3}
+            data[column] = data[column].map(shift_mapping)
+        if column == 'METHOD':
+            method_mapping = {'OTHERS': 1, 'KNIFE': 2, 'GUN': 3}
+            data[column] = data[column].map(method_mapping)
+        if column == 'NEIGHBORHOOD_CLUSTER':
+            # e.g. 'Cluster 20'(string) ==> 20(int64)
+            neighborhoodcluster_mapping = {}
+            for i in range(len(data[column])):
+                neighborhoodcluster_mapping[data[column][i]] = int(data[column][i].split(' ')[1])
+            data[column] = data[column].map(neighborhoodcluster_mapping)
+        if column == 'VOTING_PRECINCT':
+            # e.g. 'Precinct 100'(string) ==> 100(int64)
+            votingprecinct_mapping = {}
+            for i in range(len(data[column])):
+                votingprecinct_mapping[data[column][i]] = int(data[column][i].split(' ')[1])
+            data[column] = data[column].map(votingprecinct_mapping)
+        if column == 'OFFENSE':
+            # the bigger the number, the higher level of the crime
+            offense_mapping = {'THEFT/OTHER': 1, 'THEFT F/AUTO': 2, 'MOTOR VEHICLE THEFT': 3, 'BURGLARY': 4,
+                               'ARSON': 5, 'ASSAULT W/DANGEROUS WEAPON': 6, 'ROBBERY': 7, 'SEX ABUSE': 8, 'HOMICIDE': 9}
+            data[column] = data[column].map(offense_mapping)
 
 
 def main():
@@ -94,7 +128,11 @@ def main():
     checkMissing(myData)
     # bin the data
     binning(myData)
+    # convert some nominal attributes to numeric attributes
+    convertNominalAttr(myData)
+
     describe(myData)
+
 
 if __name__ == '__main__':
     main()
