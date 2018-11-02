@@ -17,7 +17,7 @@ def getArguments():
     get and parse command line arguments
     '''
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', type=str, default='./dataset/crime2017_cleaned_preprocessed.csv', help='the file path')
+    parser.add_argument('-f', type=str, default='./dataset/crime2017_preprocessed.csv', help='the file path')
     parser.add_argument('-m', type=str, help="choose ttest or avano or logistic regression to use")
     parser.add_argument('--attr', nargs='+', help="first is attribute grouped by, second is target attribute")
     parser.add_argument('--div', nargs='+', help="two values in groupby attribute and they should be converted to int")
