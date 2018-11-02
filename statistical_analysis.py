@@ -6,7 +6,7 @@
 import numpy as np
 import argparse
 import pandas as pd
-
+from apyori import apriori
 
 def getArguments():
     # get and parse command line arguments
@@ -117,6 +117,14 @@ def convertNominalAttr(data):
             data[column] = data[column].map(offense_mapping)
 
 
+#############################
+# association rule mining by running Apriori
+def associationRules(data):
+    results = list(apriori(data,min_support=0.4,min_confidence=0.7))
+    print(results)
+    return results
+
+
 def main():
     args = getArguments()
     myData = pd.read_csv(args.f, sep=',', encoding='latin1')
@@ -130,8 +138,11 @@ def main():
     binning(myData)
     # convert some nominal attributes to numeric attributes
     convertNominalAttr(myData)
-
     describe(myData)
+    # write into a new .csv file
+    myData.to_csv(args.f.replace('.csv', '_preprocessed.csv'), sep=',',index=None)
+    # association rule mining to find the frequent patterns
+    associationRules(myData)
 
 
 if __name__ == '__main__':
