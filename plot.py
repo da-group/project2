@@ -15,7 +15,7 @@ def getArguments():
     get and parse command line arguments
     '''
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', type=str, default='./dataset/crime2017_cleaned_preprocessed.csv', help='the file path')
+    parser.add_argument('-f', type=str, default='./dataset/crime2017_preprocessed.csv', help='the file path')
     parser.add_argument('--hvar', nargs='+', help="attributes' names to draw histgrams")
     parser.add_argument('--bins', nargs='+', help="bin number list with respect to values in hvar")
     parser.add_argument('--qvar', nargs='+', help="attributes' names to draw correlation graphs");
