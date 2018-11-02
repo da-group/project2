@@ -24,8 +24,8 @@ def tTest(myData, groupA, divL, targetA):
     # give a statistic analysis of relations of tow attributes
     myData.groupby(groupA)[targetA].describe()
     # two dataset to test paired samples
-    SeriA = myData[targetA][groupA==int(div[0])]
-    SeriB = myData[targetA][groupA==int(div[1])]
+    SeriA = myData[targetA][groupA==div[0]]
+    SeriB = myData[targetA][groupA==div[1]]
     s, p = stats.ttest_ind(setosa['sepal_width'], versicolor['sepal_width'])
     print("sValue is", s)
     print("pValue is", p)
