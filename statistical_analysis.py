@@ -146,7 +146,7 @@ def main():
     convertNominalAttr(myData)
     describe(myData)
     # write into a new .csv file
-    myData.to_csv(args.f.replace('.csv', '_preprocessed.csv'), sep=',',index=None)
+    myData.to_csv(args.f.replace('_cleaned.csv', '_preprocessed.csv'), sep=',',index=None)
     # association rule mining to find the frequent patterns
     associationRules(myData)
 
