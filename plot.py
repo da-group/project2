@@ -18,19 +18,18 @@ def getArguments():
     parser.add_argument('-f', type=str, default='./dataset/crime2017.csv', help='the file path')
     parser.add_argument('--hvar', nargs='+', help="attributes' names to draw histgrams")
     parser.add_argument('--bins', nargs='+', help="bin number list with respect to values in hvar")
-    parser.add_argument('--qvar', type=str, nargs='+', help="attributes' names to draw correlation graphs");
+    parser.add_argument('--qvar', nargs='+', help="attributes' names to draw correlation graphs");
     return parser.parse_args()
 
 
 def plotHist(myData, attribute_list, bin_num, save_path):
     for a, bn in zip(attribute_list, bin_num):
-        print(a, bn)
-        array = np.array(myData[a])
-        bins = [myData[a].min()+(myData[a].max()-myData[a].min())*1.0*i/10 for i in range(11)]
+        bins = [array.max()+(array.max()-array.min())*1.0*i/10 for i in range(int(bn)+1)]
         plt.title('a')
         plt.xlabel('value')
         plt.ylabel('frequency')
         plt.savefig(save_path+a+'.png')
+        plt.show()
 
 
 def plotCor(myData, attributeList, save_path):
@@ -39,7 +38,9 @@ def plotCor(myData, attributeList, save_path):
     name = save_path
     for a in attributeList:
         name += a+'_'
+    name = name[:-1]
     plt.savefig(name+'.png')
+    plt.show()
 
 
 def main():
