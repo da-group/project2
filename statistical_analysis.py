@@ -29,14 +29,16 @@ def describe(data):
 # def LOF(colum):
 
 
+#############################
+# drop the attributes that are not useful
 def dropUselessAttr(data):
     '''
-    drop the attributes that are not useful
     in crime2017_cleaned.csv: "OBJECTID" is not helpful
     '''
     data.drop(['OBJECTID'], axis=1, inplace=True)
 
-
+#############################
+# handle missing values
 def handleMissingValues(data):
     '''
     count the missing value of a column
@@ -60,7 +62,7 @@ def handleMissingValues(data):
                 print("")
             '''
             fill the missing value with mode
-            because the mean isn't valid
+            because the mean isn't valid in most cases
             '''
             data[column].fillna(data[column].mode()[0], inplace=True)
 
@@ -75,13 +77,17 @@ def checkMissing(data):
         print(column + ": " + str(NaN_num))
 
 
+#############################
+# bin some numeric attributes
 def binning(data):
     '''
-    bin the attribute PSA (min:101, max:708)
+    bin the attribute PSA (min:101, max:708) in crime2017_cleaned.csv
     '''
-    # pre-bin
-    psa_bins = [100, 200, 300, 400, 500, 600, 700, 800]
-    data['PSA_bin'] = np.digitize(data['PSA'], psa_bins)
+    for column in data.columns:
+        if column == 'PSA':
+            # pre-bin
+            psa_bins = [100, 200, 300, 400, 500, 600, 700, 800]
+            data['PSA_bin'] = np.digitize(data['PSA'], psa_bins)
     return data
 
 
