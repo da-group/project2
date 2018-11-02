@@ -19,9 +19,17 @@ def getArguments():
 def associationRules(data):
     # convert the DataFrame into a list
     list_data = data.astype(str).values.tolist()
-    results = list(apriori(list_data, min_support=0.4, min_confidence=0.7))
-    list_rules = [list(results[i][0]) for i in range(0,len(results))]
+    results = list(apriori(list_data, min_support=0.2, min_confidence=0.5))
+    for i in range(0, len(results)):
+        print("item set:")
+        print(list(results[i][0]))
+        print("details:")
+        print(results[i])
+        print("")
+    '''
+    list_rules = [list(results[i][0]) for i in range(0, len(results))]
     print(list_rules)
+    '''
     return results
 
 def main():
