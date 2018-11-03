@@ -34,5 +34,9 @@ Usage: -f path of data, default is ./dataset/crime2017_preprocessed.csv
        --lab attribute's name to use as label when building logistic regression
 Example: python/python3 stat.py -m ttest --attr METHOD LONGITUDE --div 1 2
 
+machineLearning.py
+Usage: run directly, it will use linear regression, knn, naive Bayes, SVM, random forest and decision tree to train the model with data
+crime2017_preprocessed.csv
+
 
 
