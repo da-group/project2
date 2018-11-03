@@ -23,6 +23,10 @@ def getArguments():
 
 
 def plotHist(myData, attribute_list, bin_num, save_path):
+    '''
+    draw histograms given attribute list and bin numbers
+    use equal width binning
+    '''
     for a, bn in zip(attribute_list, bin_num):
         array = np.array(myData[a])
         bins = [array.min()+(array.max()-array.min())*1.0*i/int(bn) for i in range(int(bn)+1)]
@@ -35,6 +39,10 @@ def plotHist(myData, attribute_list, bin_num, save_path):
 
 
 def plotCor(myData, attributeList, save_path):
+    '''
+    draw scatter matrix and correlation map given attribute list
+    '''
+    # draw scatter matrix
     myData = myData[attributeList]
     pd.scatter_matrix(myData, diagonal='kde')
     name = save_path
@@ -44,12 +52,14 @@ def plotCor(myData, attributeList, save_path):
     plt.savefig(name+'.png')
     corr = myData.corr()
     plt.show()
+    # another figure to show correlation map
     plt.figure()
     plt.imshow(corr)
     plt.colorbar()
     tick_marks = [i for i in range(len(myData.columns))]
     plt.xticks(tick_marks, myData.columns, rotation='vertical')
     plt.yticks(tick_marks, myData.columns)
+    plt.savefig(name+'_corr.png')
     plt.show()
 
 
