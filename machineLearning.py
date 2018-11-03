@@ -23,17 +23,19 @@ def load(filename):
 
 def binning(data):
     #binning the results, without this the accuracy is too low to accept
+    #to make roc work, we need divide the Y in two parts
     bins = [0, 2, 4]
     data = pd.cut(data, bins, labels=[0, 1])
     data = np.array(data).reshape(-1,1).ravel()
     return data
 
 def separateData(mydata):
+    #separate data to train set and test set
     columns = ['METHOD', 'OFFENSE', 'DISTRICT', 'PSA', 'VOTING_PRECINCT', 'SHIFT']
     myData = pd.DataFrame(mydata, columns=columns)
     myData = pd.DataFrame(myData[1:], dtype='float64')
     print(myData.dtypes)
-    valueArray = myData[1:].values
+    valueArray = myData[1:3000].values
     X = valueArray[:, 0:4]
     Y = valueArray[:, 5]
     Y = binning(Y)
@@ -58,11 +60,12 @@ def training(X_train, Y_train):
     models.append(('SVM', SVC()))
 
     # Evaluate each model, add results to a results array,
-    # Print the accuracy results (remember these are averages and std
+    # Print the accuracy results (remember these are averages and std)
     results = []
     names = []
     for name, model in models:
         kfold = KFold(n_splits=num_folds, random_state=seed, shuffle=False)
+        # cross validation
         cv_results = cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
         results.append(cv_results)
         names.append(name)
@@ -70,6 +73,7 @@ def training(X_train, Y_train):
         print(msg)
 
 def linear(X_train, Y_train, X_validate, Y_validate):
+    #linear regression evaluated by MSE
     lr = LinearRegression()
     lr.fit(X_train, Y_train)
     prediction = lr.predict(X_validate)
@@ -78,6 +82,7 @@ def linear(X_train, Y_train, X_validate, Y_validate):
     print('MSE: ', mse)
 
 def knnLearner(X_train, Y_train, X_validate, Y_validate):
+    #knn classifier
     knn = KNeighborsClassifier()
     knn.fit(X_train, Y_train)
     prediction = knn.predict(X_validate)
@@ -92,6 +97,7 @@ def knnLearner(X_train, Y_train, X_validate, Y_validate):
     print(classification_report(Y_validate, prediction))
 
 def decisionTree(X_train, Y_train, X_validate, Y_validate):
+    #cat decision tree
     cat = DecisionTreeClassifier()
     cat.fit(X_train, Y_train)
     prediction = cat.predict(X_validate)
@@ -106,6 +112,7 @@ def decisionTree(X_train, Y_train, X_validate, Y_validate):
     print(classification_report(Y_validate, prediction))
 
 def naiveB(X_train, Y_train, X_validate, Y_validate):
+    #naiveBayes
     nb = MultinomialNB()
     nb.fit(X_train, Y_train)
     prediction = nb.predict(X_validate)
@@ -120,6 +127,7 @@ def naiveB(X_train, Y_train, X_validate, Y_validate):
     print(classification_report(Y_validate, prediction))
 
 def randomForest(X_train, Y_train, X_validate, Y_validate):
+    #random forest
     ranf = RandomForestClassifier()
     ranf.fit(X_train, Y_train)
     prediction = ranf.predict(X_validate)
@@ -134,6 +142,7 @@ def randomForest(X_train, Y_train, X_validate, Y_validate):
     print(classification_report(Y_validate, prediction))
 
 def svmClassifier(X_train, Y_train, X_validate, Y_validate):
+    #svm
     svm = RandomForestClassifier()
     svm.fit(X_train, Y_train)
     prediction = svm.predict(X_validate)
