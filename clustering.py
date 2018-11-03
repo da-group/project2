@@ -18,12 +18,21 @@ import pylab as pl
 from sklearn import decomposition
 from pprint import pprint
 from sklearn.metrics import calinski_harabaz_score
-
+import argparse
 
 
 filepath = './dataset/crime2017_preprocessed.csv'
-myData = pd.read_csv(filepath, sep=',', encoding='latin1')
-myData = myData.drop(['REPORT_DAT','BLOCK','BLOCK_GROUP','START_DATE','END_DATE','ANC','PSA'],axis = 1)
+
+
+def getArguments():
+    # get and parse command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-f', type=str, default=filepath, help='the file path')
+    return parser.parse_args()
+
+
+
 
 def NormalizeData():
     fixData=pd.concat([myData['CCN'], myData['SHIFT'], myData['METHOD'], myData['OFFENSE'], myData['XBLOCK'], myData['YBLOCK'],myData['WARD'],myData['DISTRICT'],myData['NEIGHBORHOOD_CLUSTER'],myData['CENSUS_TRACT'],myData['VOTING_PRECINCT'],myData['LATITUDE'],myData['LONGITUDE'],myData['PSA_bin']], 
@@ -58,6 +67,7 @@ def KmeansClustering():
     pca = decomposition.PCA(n_components=2)
     plot_columns = pca.fit_transform(normalizedDataFrame)
     plt.scatter(x=plot_columns[:,0], y=plot_columns[:,1], c=cluster_labels)
+    plt.savefig('./plot/kmeans_pca.png')
     plt.show()
 
     
@@ -84,14 +94,18 @@ def Agglomerative():
     pca = decomposition.PCA(n_components=2)
     plot_columns = pca.fit_transform(normalizedDataFrame)
     plt.scatter(x=plot_columns[:,0], y=plot_columns[:,1], c=cluster_labels)
+    plt.savefig('./plot/agglomerative_pca.png')
     plt.show()
 
 
 #DBScan
 def DBScan():
     normalizedDataFrame = NormalizeData()
-    dbscan = DBSCAN(algorithm='auto', eps=3, leaf_size=30, metric='euclidean',
-    metric_params=None, min_samples=2, n_jobs=None, p=None)
+    #normalizedDataFrame= normalizedDataFrame.sample(frac=0.2, replace=False,axis=0)
+    #print(normalizedDataFrame)
+    
+    dbscan = DBSCAN(algorithm='auto', eps=0.2, leaf_size=30, metric='euclidean',
+    min_samples=10, n_jobs=1, p=None)
     cluster_labels = dbscan.fit_predict(normalizedDataFrame)
     pprint("DBSCAN:")
     pprint(cluster_labels)
@@ -107,6 +121,7 @@ def DBScan():
     pca = decomposition.PCA(n_components=2)
     plot_columns = pca.fit_transform(normalizedDataFrame)
     plt.scatter(x=plot_columns[:,0], y=plot_columns[:,1], c=cluster_labels)
+    plt.savefig('./plot/dbscan_pca.png')
     plt.show()
 
 
@@ -115,6 +130,9 @@ def DBScan():
      
     
 if __name__=="__main__":
-  KmeansClustering()
-  Agglomerative()
-  DBScan()
+    args = getArguments()
+    myData = pd.read_csv(args.f, sep=',', encoding='latin1')
+    myData = myData.drop(['REPORT_DAT','BLOCK','BLOCK_GROUP','START_DATE','END_DATE','ANC','PSA'],axis = 1)
+    KmeansClustering()
+    Agglomerative()
+    DBScan()
