@@ -9,10 +9,20 @@ import numpy as np
 import pandas as pd
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn import preprocessing
+import argparse
+
 
 filepath = './dataset/crime2017_preprocessed.csv'
-myData = pd.read_csv(filepath, sep=',', encoding='latin1')
-myData = myData.drop(['REPORT_DAT','BLOCK','BLOCK_GROUP','START_DATE','END_DATE','ANC'],axis = 1)
+
+
+def getArguments():
+    # get and parse command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-f', type=str, default=filepath, help='the file path')
+    return parser.parse_args()
+
+
 
 
 def lof(k):
@@ -27,6 +37,10 @@ def lof(k):
 
     
 def main():
+    args = getArguments()
+    myData = pd.read_csv(filepath, sep=',', encoding='latin1')
+    myData = myData.drop(['REPORT_DAT','BLOCK','BLOCK_GROUP','START_DATE','END_DATE','ANC'],axis = 1)
+
     lof(35)
     lof(25)
     lof(45)
