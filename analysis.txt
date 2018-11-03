@@ -1,0 +1,22 @@
+Histogram and Correlations
+1. run python/python3 plot.py --hvar SHIFT LATITUDE LONGITUDE --bins 3 10 10 --qvar WARD DISTRICT NEIGHBORHOOD_CLUSTER
+   From the histograms, we can see most of the crimes happened in evening and mid night. Longitude and Latitude crimes happened at are near to gaussian distribution.
+   From the scatter plot, we can see the three attributes are relatively highly correlated. This indicates that these 3 types of area dividing are following the same order.
+
+Hypothesis Testing
+1. run python/python3 stat.py -m ttest --attr SHIFT LONGITUDE --div 1 2
+   First, we can see distribution of longitude in day time and evening is near to gaussian distribution
+   The null hypothesis is that crimes happened in day time and evening has little difference H0：μ0 = μ1
+   The alternative hypothesis is that crimes happened in day time and evening has significant difference H1：μ0 ≠ μ1
+   The output of p value is around 5.88e-10, therefore reject the null hypothesis in support of the alternative hypothesis
+2. run python/python3 stat.py -m logis --lab SHIFT
+   The hypothesis is that we can predict time crimes happened by other attributes related to area.
+   We use the logistic regression to test this hypothesis.
+   The output is 
+   accuracy is 0.444789214637278
+   confusion matrix is
+   [[ 982 2274  174]
+    [ 888 2847  297]
+    [ 446 1110  328]]
+    We can see the hypothesis can not be proved. Area is not directly related to crime time.
+
