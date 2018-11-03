@@ -38,5 +38,10 @@ machineLearning.py
 Usage: run directly, it will use linear regression, knn, naive Bayes, SVM, random forest and decision tree to train the model with data
 crime2017_preprocessed.csv
 
+outliers.py
+Usage: using LOF to detect outliers in dataset crime2017_preprocessed.csv, using different k values.
+
+clustering.py
+Usage: using different strategies of clustering: kmeans,hierarchical clustering and dbscan on the data set crime2017_preprocessed.csv, evaluating these 3 clustering strategies with the Calinski-Harabaz procedures, plotting the PCA projection of the clusters.
 
 
