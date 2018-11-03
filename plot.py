@@ -25,7 +25,7 @@ def getArguments():
 def plotHist(myData, attribute_list, bin_num, save_path):
     for a, bn in zip(attribute_list, bin_num):
         array = np.array(myData[a])
-        bins = [array.min()+(array.max()-array.min())*1.0*i/10 for i in range(int(bn)+1)]
+        bins = [array.min()+(array.max()-array.min())*1.0*i/int(bn) for i in range(int(bn)+1)]
         plt.title(a)
         plt.xlabel('value')
         plt.ylabel('frequency')
@@ -42,6 +42,14 @@ def plotCor(myData, attributeList, save_path):
         name += a+'_'
     name = name[:-1]
     plt.savefig(name+'.png')
+    corr = myData.corr()
+    plt.show()
+    plt.figure()
+    plt.imshow(corr)
+    plt.colorbar()
+    tick_marks = [i for i in range(len(myData.columns))]
+    plt.xticks(tick_marks, myData.columns, rotation='vertical')
+    plt.yticks(tick_marks, myData.columns)
     plt.show()
 
 
