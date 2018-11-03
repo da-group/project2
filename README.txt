@@ -10,7 +10,8 @@ Usage: -f path of data set, default is ./dataset/crime2017_cleaned.csv
 Example: python/python3 statistical_analysis.py -f ./dataset/crime2017_cleaned.csv
 
 
-association_rules.py: implement for association rule mining, using the Apriori algorithm
+association_rules.py: implement for association rule mining, using the Apriori algorithm. 
+(source of the package: https://pypi.python.org/pypi/apyori/1.1.1)
 Usage: -f path of data, default is ./dataset/crime2017_cleaned.csv
        -s minimum support ratio (must be > 0, default: 0.1)
        -c minimum confidence (default: 0.5)
