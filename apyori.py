@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 """
+This is downloaded from: https://pypi.python.org/pypi/apyori/1.1.1
 a simple implementation of Apriori algorithm by Python.
 """
 
